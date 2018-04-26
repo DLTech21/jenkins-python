@@ -1,0 +1,62 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 26
+    buildToolsVersion "26.0.1"
+    defaultConfig {
+        applicationId "com.youdeyi.m.doctor"
+        minSdkVersion 16
+        targetSdkVersion 26
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        ndk {
+            abiFilters 'armeabi'
+        }
+        buildConfigField "boolean", "IS_CA", IS_CA
+        buildConfigField "boolean", "IS_SIGN", IS_SIGN
+        buildConfigField "boolean", "IS_MUTILSIGN", IS_MUTILSIGN
+        buildConfigField "boolean", "IS_AUTH", IS_AUTH
+
+        buildConfigField "boolean", "IS_CREATE_CERT", IS_CREATE_CERT
+        buildConfigField "boolean", "IS_GET_CERT", IS_GET_CERT
+        buildConfigField "boolean", "IS_CHANGE_CERT_PIN", IS_CHANGE_CERT_PIN
+        buildConfigField "boolean", "IS_RESET_CERT", IS_RESET_CERT
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'gdcasdk-proguard-rules.pro'
+        }
+        debug {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'gdcasdk-proguard-rules.pro'
+        }
+    }
+    repositories {
+        flatDir {
+            dirs 'libs' //this way we can find the .aar file in libs folder
+        }
+    }
+    sourceSets {
+        main {
+            //jni库的调用会到资源文件夹下libs里面找so文件
+            jniLibs.srcDirs = ['libs']
+        }
+    }
+}
+
+dependencies {
+
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    compile 'com.android.support:appcompat-v7:26.+'
+    compile 'com.android.support:percent:26.+'
+    testCompile 'junit:junit:4.12'
+    compile(name: 'gdcasdk-sign-343', ext: 'aar')
+    compile 'com.squareup.okhttp3:okhttp:3.6.0'
+    compile 'com.google.code.gson:gson:2.8.0'
+    compile 'org.greenrobot:eventbus:3.0.0'
+}
